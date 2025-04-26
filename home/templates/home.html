@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block title %}Home{% endblock title %} 
+{% block content %}
+
+
+<form method="POST" action="{% url 'search_procducts' %}">
+  {% csrf_token %}
+
+  <input type="text" name="search" id="" placeholder="Search for products" required>
+  <button type="submit">Search</button>
+</form>
+
+
+
+
+<h1>Shop</h1>
+<div>
+  {% for product in products %}
+  <div onclick="location.href='{% url 'product_details' product.slug %}'" style="cursor: pointer;" >
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="200" />
+    <h3>{{ product.name }}</h3>
+  </div>
+  {% endfor %}
+</div>
+{% endblock content %}
