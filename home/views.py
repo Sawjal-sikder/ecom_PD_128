@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 
 # Create your views here.
@@ -28,3 +28,21 @@ def search_procducts(request):
             }
             return render(request, 'home.html', context)
       return render(request, 'home.html')
+
+
+def add_to_cart(request, id):
+    product = get_object_or_404(Product, id=id)
+
+    # Check if this product is already in the user's cart
+    cart_item, created = Cart.objects.get_or_create(
+        user=request.user,
+        product=product,
+        defaults={'quantity': 1}
+    )
+
+    if not created:
+        # If already exists, increase quantity
+        cart_item.quantity += 1
+        cart_item.save()
+
+    return redirect('home')
